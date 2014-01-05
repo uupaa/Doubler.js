@@ -33,7 +33,7 @@ $ npm test
     ok.
 ```
 
-# Double vs Base64 vs HexEncode
+# Doubler vs Base64 vs HexEncode
 
 ## Chrome
 
