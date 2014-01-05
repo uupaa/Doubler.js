@@ -5,7 +5,7 @@ Doubler.js is SQLite safe packer.
 
 # API Document
 
-https://github.com/uupaa/Douber.js/wiki/Douber
+https://github.com/uupaa/Doubler.js/wiki/Doubler
 
 # Install, Setup modules
 
@@ -24,7 +24,7 @@ $ npm install
 ```sh
 $ npm test
 
-    > uupaa.doubler.js@0.8.0 test /Users/username/path/Douber.js
+    > uupaa.doubler.js@0.8.0 test /Users/username/path/Doubler.js
     > NODE_ENV=production NODE_PATH=lib node --harmony test/index.node.js; open test/index.html
 
       :
@@ -48,14 +48,14 @@ $ npm test
 
 ## Node.js
 
-| test case         |  encode | decode | note    |
-|-------------------|---------|--------|---------|
-| testBase64_1MB    |  324 ms | 162 ms |         |
-| testDoubler_1MB   |   30 ms |  63 ms |         |
-| testHexEncode_1MB |  201 ms |        |         |
-| testBase64_5MB    | 1581 ms | 672 ms |         |
-| testDoubler_5MB   |  147 ms | 322 ms |         |
-| testHexEncode_5MB |  860 ms |        |         |
+| test case         |  encode | decode | note       |
+|-------------------|---------|--------|------------|
+| testBase64_1MB    |   18 ms |   5 ms | use Buffer |
+| testDoubler_1MB   |   34 ms |  78 ms |            |
+| testHexEncode_1MB |  233 ms |        |            |
+| testBase64_5MB    |   92 ms |  36 ms | use Buffer |
+| testDoubler_5MB   |  144 ms | 338 ms |            |
+| testHexEncode_5MB |  980 ms |        |            |
 
 Node.js has not global.atob and global.btoa functions.
 
