@@ -2,6 +2,9 @@ var test = new Test().add([
         testDoublerBasic,
         testDoublerHasTailByte,
         testDoublerEscape,
+        testBase64_100KB,
+        testDoubler_100KB,
+        testHexEncode_100KB,
         testBase64_1MB,
         testDoubler_1MB,
         testHexEncode_1MB,
@@ -15,7 +18,13 @@ if (typeof document !== "undefined" && this.localStorage) {
         testDoublerStorage,
     ]);
 }
-test.run();
+test.run().worker(function(err, test) {
+    if (!err) {
+        Doubler = Doubler_;
+        new Test(test).run().worker();
+    }
+});
+
 
 function testDoublerBasic(next) {
 
@@ -70,6 +79,38 @@ function testDoublerEscape(next) {
         console.log("testDoublerEscape ng");
         next && next.miss();
     }
+}
+
+function testBase64_100KB(next) {
+
+    var KB = 1024;
+    var obj1 = _encodeBase64( 100 * KB );
+    var obj2 = _decodeBase64( obj1 );
+
+    console.log("testBase64_100KB" +
+                ", encode: " + obj1.elapsedTime + " ms" +
+                ", decode: " + obj2.elapsedTime + " ms");
+    next && next.pass();
+}
+function testDoubler_100KB(next) {
+
+    var KB = 1024;
+    var obj1 = _encodeDoubler( 100 * KB );
+    var obj2 = _decodeDoubler( obj1 );
+
+    console.log("testDoubler_100KB" +
+                ", encode: " + obj1.elapsedTime + " ms" +
+                ", decode: " + obj2.elapsedTime + " ms");
+    next && next.pass();
+}
+function testHexEncode_100KB(next) {
+
+    var KB = 1024;
+    var obj1 = _encodeHexEncode( 100 * KB );
+
+    console.log("testHexEncode_100KB" +
+                ", encode: " + obj1.elapsedTime + " ms");
+    next && next.pass();
 }
 
 
