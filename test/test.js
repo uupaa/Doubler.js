@@ -19,7 +19,7 @@ if (typeof document !== "undefined" && this.localStorage) {
     ]);
 }
 test.run().worker(function(err, test) {
-    if (!err) {
+    if (!err && typeof Doubler_ !== "undefined") {
         Doubler = Doubler_;
         new Test(test).run().worker();
     }

@@ -10,15 +10,11 @@ https://github.com/uupaa/Doubler.js/wiki/Doubler
 # Install, Setup modules
 
 ```sh
+$ brew install closure-compiler
+
 $ git clone git@github.com:uupaa/Doubler.js.git
 $ cd Doubler.js
 $ npm install
-```
-
-# Test
-
-```sh
-$ npm test
 ```
 
 # Minify
@@ -31,4 +27,9 @@ $ npm start
 $ node node_modules/uupaa.minify.js --keep --output ./lib/Doubler.min.js ./lib/Doubler.js
 ```
 
+# Test
+
+```sh
+$ npm test
+```
 
