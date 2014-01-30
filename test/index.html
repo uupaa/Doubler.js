@@ -5,9 +5,10 @@
 onmessage = function(event) {
     var baseDir = event.data.baseDir;
 
+    importScripts(baseDir + "../node_modules/uupaa.mappedarray.js/lib/MappedArray.js");
     importScripts(baseDir + "../node_modules/uupaa.help.js/lib/Help.js");
-    importScripts(baseDir + "../node_modules/uupaa.test.js/lib/Test.js");
     importScripts(baseDir + "../node_modules/uupaa.task.js/lib/Task.js");
+    importScripts(baseDir + "../node_modules/uupaa.test.js/lib/Test.js");
     importScripts(baseDir + "../node_modules/uupaa.wordarray.js/lib/WordArray.js");
     importScripts(baseDir + "../node_modules/uupaa.bytearray.js/lib/ByteArray.js");
     importScripts(baseDir + "../node_modules/uupaa.base64.js/lib/Base64.js");
@@ -19,9 +20,10 @@ onmessage = function(event) {
 };
 </script>
 
+<script src="../node_modules/uupaa.mappedarray.js/lib/MappedArray.js"></script>
 <script src="../node_modules/uupaa.help.js/lib/Help.js"></script>
-<script src="../node_modules/uupaa.test.js/lib/Test.js"></script>
 <script src="../node_modules/uupaa.task.js/lib/Task.js"></script>
+<script src="../node_modules/uupaa.test.js/lib/Test.js"></script>
 <script src="../node_modules/uupaa.wordarray.js/lib/WordArray.js"></script>
 <script src="../node_modules/uupaa.bytearray.js/lib/ByteArray.js"></script>
 <script src="../node_modules/uupaa.base64.js/lib/Base64.js"></script>
