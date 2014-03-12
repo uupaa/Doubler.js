@@ -1,35 +1,65 @@
 Doubler.js
 =========
 
-Doubler.js is SQLite safe packer.
+SQLite safe packer.
 
-# API Document
+# Document
 
 https://github.com/uupaa/Doubler.js/wiki/Doubler
 
-# Install, Setup modules
+# How to use
 
-```sh
-$ brew install closure-compiler
-
-$ git clone git@github.com:uupaa/Doubler.js.git
-$ cd Doubler.js
-$ npm install
+```js
+<script src="lib/Doubler.js">
+<script>
+// for Browser
+console.log( Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
+</script>
 ```
 
-# Minify
+```js
+// for WebWorkers
+importScripts("lib/Doubler.js");
 
-```sh
-$ npm start
-
-  or
-
-$ node node_modules/uupaa.minify.js --keep --output ./lib/Doubler.min.js ./lib/Doubler.js
+console.log( Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
 ```
 
-# Test
+```js
+// for Node.js
+var Doubler = require("lib/Doubler.js");
 
-```sh
-$ npm test
+console.log( Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
 ```
+
+# for Developers
+
+1. Install development dependency tools
+
+    ```sh
+    $ brew install closure-compiler
+    $ brew install node
+    $ npm install -g plato
+    ```
+
+2. Clone Repository and Install
+
+    ```sh
+    $ git clone git@github.com:uupaa/Doubler.js.git
+    $ cd Doubler.js
+    $ npm install
+    ```
+
+3. Build and Minify
+
+    `$ npm run build`
+
+4. Test
+
+    `$ npm run test`
+
+5. Lint
+
+    `$ npm run lint`
+
+
 
