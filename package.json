@@ -1,6 +1,6 @@
 {
   "name":           "uupaa.doubler.js",
-  "version":        "0.8.9",
+  "version":        "0.8.10",
   "description":    "SQLite safe packer.",
   "url":            "https://github.com/uupaa/Doubler.js",
   "keywords":       ["sqlite", "unicode", "doubler", "storage", "codec", "util", "uupaa"],
@@ -9,17 +9,16 @@
     "url":          "https://github.com/uupaa/Doubler.js.git"
   },
   "scripts": {
-    "watch":        "node node_modules/uupaa.watch.js --verbose --action build ./lib/Doubler.js",
-    "build":        "node node_modules/uupaa.minify.js --keep --option 'formatting pretty_print' --output ./lib/Doubler.min.js ./lib/Doubler.js",
-    "build-release":"node node_modules/uupaa.minify.js --module all --output ./lib/Doubler.min.js",
+    "watch":        "node node_modules/uupaa.watch.js --verbose --action build",
+    "build":        "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty",
+    "build-simple": "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty --nowrap --simple",
+    "build-release":"node node_modules/uupaa.minify.js --verbose --strict --module",
     "test":         "NODE_ENV=production NODE_PATH=lib node --harmony test/index.node.js; open test/index.html",
-    "lint":         "plato --title Doubler.js --jshint .jshintrc -d lint/plato lib/Doubler.js; open lint/plato/index.html"
+    "lint":         "node node_modules/uupaa.plato.js; open lint/plato/index.html"
   },
-  "build": {
-    "all": { "lib/Doubler.js": "" },
-    "node": { },
-    "worker": { },
-    "browser": { }
+  "x-build": {
+    "inputs":       ["lib/Doubler.js"],
+    "output":       "lib/Doubler.min.js"
   },
   "dependencies": {
   },
@@ -28,6 +27,8 @@
     "uupaa.help.js":    "",
     "uupaa.task.js":    "",
     "uupaa.test.js":    "",
+    "uupaa.watch.js":   "",
+    "uupaa.plato.js":   "",
     "uupaa.minify.js":  "",
     "uupaa.base64.js":  "",
     "uupaa.bytearray.js": "",
