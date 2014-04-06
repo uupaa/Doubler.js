@@ -5,6 +5,7 @@
 onmessage = function(event) {
     var baseDir = event.data.baseDir;
 
+    importScripts(baseDir + "../node_modules/uupaa.console.js/lib/Console.js");
     importScripts(baseDir + "../node_modules/uupaa.valid.js/lib/Valid.js");
     importScripts(baseDir + "../node_modules/uupaa.help.js/lib/Help.js");
     importScripts(baseDir + "../node_modules/uupaa.task.js/lib/Task.js");
@@ -13,7 +14,7 @@ onmessage = function(event) {
     importScripts(baseDir + "../node_modules/uupaa.bytearray.js/lib/ByteArray.js");
     importScripts(baseDir + "../node_modules/uupaa.base64.js/lib/Base64.js");
     importScripts(baseDir + "../lib/Doubler.js");
-    importScripts(baseDir + "../lib/Doubler.min.js");
+    importScripts(baseDir + "../release/Doubler.min.js");
     importScripts(baseDir + "./test.js");
 
     self.postMessage({ error: self.errorMessage || "" });
@@ -28,7 +29,7 @@ onmessage = function(event) {
 <script src="../node_modules/uupaa.bytearray.js/lib/ByteArray.js"></script>
 <script src="../node_modules/uupaa.base64.js/lib/Base64.js"></script>
 <script src="../lib/Doubler.js"></script>
-<script src="../lib/Doubler.min.js"></script>
+<script src="../release/Doubler.min.js"></script>
 <script src="./test.js"></script>
 </body></html>
 

@@ -5,7 +5,12 @@ SQLite safe packer.
 
 # Document
 
-https://github.com/uupaa/Doubler.js/wiki/Doubler
+- https://github.com/uupaa/Doubler.js/wiki/Doubler
+
+and 
+
+- https://github.com/uupaa/WebModule and [slide](http://uupaa.github.io/Slide/slide/WebModule/index.html)
+- https://github.com/uupaa/Help.js and [slide](http://uupaa.github.io/Slide/slide/Help.js/index.html)
 
 # How to use
 
@@ -60,6 +65,4 @@ console.log( Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
 5. Lint
 
     `$ npm run lint`
-
-
 

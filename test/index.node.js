@@ -5,6 +5,6 @@ require("uupaa.wordarray.js");
 require("uupaa.bytearray.js");
 require("uupaa.base64.js");
 require("../lib/Doubler.js");
-require("../lib/Doubler.min.js");
+require("../release/Doubler.min.js");
 require("./test.js");
 
