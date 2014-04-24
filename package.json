@@ -1,6 +1,6 @@
 {
   "name":           "uupaa.doubler.js",
-  "version":        "0.8.14",
+  "version":        "0.8.15",
   "description":    "SQLite safe packer.",
   "url":            "https://github.com/uupaa/Doubler.js",
   "keywords":       ["sqlite", "unicode", "doubler", "storage", "codec", "util", "uupaa", "WebModule"],
@@ -14,17 +14,20 @@
     "build-simple": "node node_modules/uupaa.minify.js --verbose --strict --keep --pretty --nowrap --simple",
     "build-release":"node node_modules/uupaa.minify.js --verbose --strict --module",
     "test":         "npm run test-node; npm run test-browser",
+    "test-page":    "node node_modules/uupaa.test.js/bin/TestPage.js --verbose",
     "test-node":    "NODE_ENV=production NODE_PATH=lib node --harmony test/index.node.js",
     "test-browser": "open test/index.html",
     "lint":         "node node_modules/uupaa.plato.js; open lint/plato/index.html"
   },
   "x-build": {
-    "inputs":       ["lib/Doubler.js"],
-    "output":       "release/Doubler.min.js"
+    "files":        ["lib/Doubler.js"],
+    "output":       "release/Doubler.min.js",
+    "target":       ["all"]
   },
   "dependencies": {
   },
   "devDependencies": {
+    "uupaa.nodemodule.js": "",
     "uupaa.console.js": "",
     "uupaa.valid.js":   "",
     "uupaa.help.js":    "",
@@ -33,9 +36,8 @@
     "uupaa.watch.js":   "",
     "uupaa.plato.js":   "",
     "uupaa.minify.js":  "",
-    "uupaa.base64.js":  "",
-    "uupaa.bytearray.js": "",
-    "uupaa.wordarray.js": ""
+    "uupaa.wordarray.js": "",
+    "uupaa.base64.js":  ""
   },
   "lib":            "./lib/",
   "main":           "./index.js",
