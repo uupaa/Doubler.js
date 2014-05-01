@@ -1,4 +1,15 @@
-var test = new Test().add([
+var ModuleTest = (function(global) {
+
+var test = new Test({
+        disable:    false,
+        node:       true,
+        browser:    true,
+        worker:     true,
+        button:     true,
+        both:       true,
+        primary:    global["Doubler"],
+        secondary:  global["Doubler_"],
+    }).add([
         testDoublerBasic,
         testDoublerHasTailByte,
         testDoublerEscape,
@@ -18,19 +29,8 @@ if (typeof document !== "undefined" && this.localStorage) {
         testDoublerStorage,
     ]);
 }
-test.run(function(err, test) {
-    if (1) {
-        err || test.worker(function(err, test) {
-            if (!err && typeof Doubler_ !== "undefined") {
-                var name = Test.swap(Doubler, Doubler_);
 
-                new Test(test).run(function(err, test) {
-                    Test.undo(name);
-                });
-            }
-        });
-    }
-});
+return test.run().clone();
 
 
 function testDoublerBasic(next) {
@@ -266,4 +266,6 @@ function _makeRandomSource(length) { // @arg Number:
     }
     return source;
 }
+
+})((this || 0).self || global);
 
