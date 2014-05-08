@@ -1,14 +1,12 @@
-var ModuleTest = (function(global) {
+var ModuleTestDoubler = (function(global) {
 
-var test = new Test({
+var test = new Test("Doubler", {
         disable:    false,
-        node:       true,
         browser:    true,
         worker:     true,
+        node:       true,
         button:     true,
         both:       true,
-        primary:    global["Doubler"],
-        secondary:  global["Doubler_"],
     }).add([
         testDoublerBasic,
         testDoublerHasTailByte,
@@ -40,10 +38,8 @@ function testDoublerBasic(next) {
     var byteArray2 = Doubler.decode( wordArray );
 
     if (byteArray.join(",") === byteArray2.join(",")) {
-        console.log("testDoublerBasic ok");
         next && next.pass();
     } else {
-        console.log("testDoublerBasic ng");
         next && next.miss();
     }
 }
@@ -58,10 +54,8 @@ function testDoublerHasTailByte(next) {
     var byteArray2 = Doubler.decode( wordArray );
 
     if (byteArray.join(",") === byteArray2.join(",")) {
-        console.log("testDoublerHasTailByte ok");
         next && next.pass();
     } else {
-        console.log("testDoublerHasTailByte ng");
         next && next.miss();
     }
 }
@@ -80,10 +74,8 @@ function testDoublerEscape(next) {
     var byteArray2 = Doubler.decode( wordArray );
 
     if (byteArray.join(",") === byteArray2.join(",")) {
-        console.log("testDoublerEscape ok");
         next && next.pass();
     } else {
-        console.log("testDoublerEscape ng");
         next && next.miss();
     }
 }
@@ -205,10 +197,8 @@ function testDoublerStorage(next) {
     localStorage.removeItem(key);
 
     if (byteArray.join(",") === byteArray2.join(",")) {
-        console.log("testDoublerStorage ok");
         next && next.pass();
     } else {
-        console.log("testDoublerStorage ng");
         next && next.miss();
     }
 }
