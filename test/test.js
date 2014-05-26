@@ -49,7 +49,7 @@ function testDoublerHasTailByte(next) {
     var byteString = "\u0000\u0001\u0002\u0003\u0004\u0005\u0020\u0021\u0032\u0033\u0048\u00fd\u00fe\u00ff";
         byteString += "\u00ff"; // add tail byte
 
-    var byteArray = ByteArray.fromString( byteString );
+    var byteArray = DataType["Array"].fromString( byteString );
     var wordArray = Doubler.encode( byteArray );
     var byteArray2 = Doubler.decode( wordArray );
 
@@ -190,9 +190,9 @@ function testDoublerStorage(next) {
                      0xfd, 0xfe,
                      0xff, 0x00];
 
-    localStorage.setItem(key, WordArray.toString( Doubler.encode( byteArray )));
+    localStorage.setItem(key, DataType["Array"].toString( Doubler.encode( byteArray )));
 
-    var byteArray2 = Doubler.decode( WordArray.fromString( localStorage.getItem(key) || "" ));
+    var byteArray2 = Doubler.decode( DataType["Array"].fromString( localStorage.getItem(key) || "", 2));
 
     localStorage.removeItem(key);
 
@@ -220,7 +220,7 @@ function _decodeDoubler(obj) {
 
 function _encodeBase64(size) {
     var byteArray = _makeRandomSource(size);
-    var byteString = ByteArray.toString( byteArray );
+    var byteString = DataType["Array"].toString( byteArray );
     var now = Date.now();
     var base64String = Base64.btoa( byteString );
 
@@ -231,7 +231,7 @@ function _decodeBase64(obj) {
     var now = Date.now();
     var byteString = Base64.atob( obj.base64String );
     var elapsedTime = Date.now() - now;
-    var byteArray = ByteArray.fromString( byteString );
+    var byteArray = DataType["Array"].fromString( byteString );
 
     return { elapsedTime: elapsedTime };
 }
@@ -239,7 +239,7 @@ function _decodeBase64(obj) {
 function _encodeHexEncode(size) {
     var byteArray = _makeRandomSource(size);
     var now = Date.now();
-    var hexEncode = ByteArray.toHexEncode( byteArray );
+    var hexEncode = DataType["Array"].toHexStringArray( byteArray ).join("");
 
     return { elapsedTime: Date.now() - now, hexEncode: hexEncode };
 }

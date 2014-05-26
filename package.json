@@ -1,6 +1,6 @@
 {
   "name":           "uupaa.doubler.js",
-  "version":        "0.8.20",
+  "version":        "0.8.21",
   "description":    "SQLite safe packer.",
   "url":            "https://github.com/uupaa/Doubler.js",
   "keywords":       ["sqlite", "unicode", "doubler", "storage", "codec", "util", "uupaa", "WebModule"],
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "uupaa.nodemodule.js": "",
+    "uupaa.reflection.js": "",
     "uupaa.console.js": "",
     "uupaa.valid.js":   "",
     "uupaa.help.js":    "",
@@ -41,7 +42,7 @@
     "uupaa.watch.js":   "",
     "uupaa.plato.js":   "",
     "uupaa.minify.js":  "",
-    "uupaa.wordarray.js": "",
+    "uupaa.datatype.js": "",
     "uupaa.base64.js":  ""
   },
   "lib":            "./lib/",
