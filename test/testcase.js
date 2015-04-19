@@ -1,97 +1,125 @@
 var ModuleTestDoubler = (function(global) {
 
+var _isNodeOrNodeWebKit = !!global.global;
+var _runOnNodeWebKit =  _isNodeOrNodeWebKit &&  /native/.test(setTimeout);
+var _runOnNode       =  _isNodeOrNodeWebKit && !/native/.test(setTimeout);
+var _runOnWorker     = !_isNodeOrNodeWebKit && "WorkerLocation" in global;
+var _runOnBrowser    = !_isNodeOrNodeWebKit && "document" in global;
+
+global["BENCHMARK"] = true;
+
 var test = new Test("Doubler", {
         disable:    false,
         browser:    true,
         worker:     true,
         node:       true,
+        nw:         true,
         button:     true,
         both:       true,
-    }).add([
+        ignoreError:false,
+    });
+    test.add([
+        // --- Doubler ---
         testDoublerBasic,
         testDoublerHasTailByte,
         testDoublerEscape,
+      //testBase64_10Byte
         testBase64_100KB,
         testDoubler_100KB,
-        testHexEncode_100KB,
         testBase64_1MB,
         testDoubler_1MB,
-        testHexEncode_1MB,
         testBase64_5MB,
         testDoubler_5MB,
-        testHexEncode_5MB,
     ]);
 
-if (typeof document !== "undefined" && this.localStorage) {
-    test.add([
-        testDoublerStorage,
-    ]);
+if (_runOnBrowser || _runOnNodeWebKit) {
+    test.add([ testDoublerStorage ]);
+} else if (_runOnWorker) {
+    //test.add([]);
+} else if (_runOnNode) {
+    //test.add([]);
 }
 
-return test.run().clone();
+function testDoublerBasic(test, pass, miss) {
 
+    var u8     = new Uint8Array([0x42, 0x44, 0x46, 0x48, 0x4a]);
+    var u16    = Doubler.encode( u8 );
+    var result = Doubler.decode( u16 );
 
-function testDoublerBasic(next) {
-
-    var byteArray = [0x42, 0x44, 0x46, 0x48, 0x4a];
-    var wordArray = Doubler.encode( byteArray );
-    var byteArray2 = Doubler.decode( wordArray );
-
-    if (byteArray.join(",") === byteArray2.join(",")) {
-        next && next.pass();
+    if (Test.likeArray(u8, result)) {
+        test.done(pass());
     } else {
-        next && next.miss();
+        test.done(miss());
     }
 }
 
-function testDoublerHasTailByte(next) {
+function testDoublerHasTailByte(test, pass, miss) {
 
     var byteString = "\u0000\u0001\u0002\u0003\u0004\u0005\u0020\u0021\u0032\u0033\u0048\u00fd\u00fe\u00ff";
         byteString += "\u00ff"; // add tail byte
 
-    var byteArray = DataType["Array"].fromString( byteString );
-    var wordArray = Doubler.encode( byteArray );
-    var byteArray2 = Doubler.decode( wordArray );
+    var u8 = Codec.StringToUint8Array( byteString );
+    var u16 = Doubler.encode( u8 );
+    var result = Doubler.decode( u16 );
 
-    if (byteArray.join(",") === byteArray2.join(",")) {
-        next && next.pass();
+    if (Test.likeArray(u8, result)) {
+        test.done(pass());
     } else {
-        next && next.miss();
+        test.done(miss());
     }
 }
 
-function testDoublerEscape(next) {
+function testDoublerEscape(test, pass, miss) {
 
-    var byteArray = [0x00, 0x00,  // -> 0x0000 (NULL)
-                     0x00, 0x20,  // -> 0x0020 (0x20)
-                     0xff, 0xfe,  // -> 0xfffe (BOM)
-                     0xff, 0xff,  // -> 0xffff (BOM)
-                     0x00, 0x00,  // -> NULL
-                     0x00, 0x20,  // -> 0x20
-                     0xd8, 0x00,  // -> 0xd800 (SurrogatePairs)
-                     0xdf, 0xff]; // -> 0xdfff (SurrogatePairs)
-    var wordArray = Doubler.encode( byteArray );
-    var byteArray2 = Doubler.decode( wordArray );
+    var u8 = new Uint8Array([0x00, 0x00,  // -> 0x0000 (NULL)
+                             0x00, 0x20,  // -> 0x0020 (0x20)
+                             0xff, 0xfe,  // -> 0xfffe (BOM)
+                             0xff, 0xff,  // -> 0xffff (BOM)
+                             0x00, 0x00,  // -> NULL
+                             0x00, 0x20,  // -> 0x20
+                             0xd8, 0x00,  // -> 0xd800 (SurrogatePairs)
+                             0xdf, 0xff]);// -> 0xdfff (SurrogatePairs)
+    var u16    = Doubler.encode( u8 );
+    var result = Doubler.decode( u16 );
 
-    if (byteArray.join(",") === byteArray2.join(",")) {
-        next && next.pass();
+    if (Test.likeArray(u8, result)) {
+        test.done(pass());
     } else {
-        next && next.miss();
+        test.done(miss());
     }
 }
 
-function testBase64_100KB(next) {
+function testBase64_10Byte(test, pass, miss) {
+    var KB = 1024;
+    var obj1 = _encodeBase64( 10 );
+    var obj2 = _decodeBase64( obj1 );
 
+    console.log("testBase64_10Byte" +
+                ", encode: " + obj1.elapsedTime + " ms" +
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
+}
+function testBase64_100KB(test, pass, miss) {
     var KB = 1024;
     var obj1 = _encodeBase64( 100 * KB );
     var obj2 = _decodeBase64( obj1 );
 
     console.log("testBase64_100KB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
-function testDoubler_100KB(next) {
+function testDoubler_100KB(test, pass, miss) {
 
     var KB = 1024;
     var obj1 = _encodeDoubler( 100 * KB );
@@ -99,21 +127,16 @@ function testDoubler_100KB(next) {
 
     console.log("testDoubler_100KB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
-}
-function testHexEncode_100KB(next) {
-
-    var KB = 1024;
-    var obj1 = _encodeHexEncode( 100 * KB );
-
-    console.log("testHexEncode_100KB" +
-                ", encode: " + obj1.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
 
-
-function testBase64_1MB(next) {
+function testBase64_1MB(test, pass, miss) {
 
     var MB = 1024 * 1024;
     var obj1 = _encodeBase64( 1 * MB );
@@ -121,10 +144,15 @@ function testBase64_1MB(next) {
 
     console.log("testBase64_1MB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
-function testDoubler_1MB(next) {
+function testDoubler_1MB(test, pass, miss) {
 
     var MB = 1024 * 1024;
     var obj1 = _encodeDoubler( 1 * MB );
@@ -132,21 +160,16 @@ function testDoubler_1MB(next) {
 
     console.log("testDoubler_1MB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
-}
-function testHexEncode_1MB(next) {
-
-    var MB = 1024 * 1024;
-    var obj1 = _encodeHexEncode( 1 * MB );
-
-    console.log("testHexEncode_1MB" +
-                ", encode: " + obj1.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
 
-
-function testBase64_5MB(next) {
+function testBase64_5MB(test, pass, miss) {
 
     var MB = 1024 * 1024;
     var obj1 = _encodeBase64( 5 * MB );
@@ -154,10 +177,15 @@ function testBase64_5MB(next) {
 
     console.log("testBase64_5MB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
-function testDoubler_5MB(next) {
+function testDoubler_5MB(test, pass, miss) {
 
     var MB = 1024 * 1024;
     var obj1 = _encodeDoubler( 5 * MB );
@@ -165,97 +193,82 @@ function testDoubler_5MB(next) {
 
     console.log("testDoubler_5MB" +
                 ", encode: " + obj1.elapsedTime + " ms" +
-                ", decode: " + obj2.elapsedTime + " ms");
-    next && next.pass();
-}
-function testHexEncode_5MB(next) {
-
-    var MB = 1024 * 1024;
-    var obj1 = _encodeHexEncode( 5 * MB );
-
-    console.log("testHexEncode_5MB" +
-                ", encode: " + obj1.elapsedTime + " ms");
-    next && next.pass();
+                ", decode: " + obj2.elapsedTime + " ms" +
+                ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
+    if (Test.likeArray(obj1.u8, obj2.u8)) {
+        test.done(pass());
+    } else {
+        test.done(miss());
+    }
 }
 
-function testDoublerStorage(next) {
+function testDoublerStorage(test, pass, miss) {
 
     var key = "testDoublerStorage";
-    var byteArray = [0x00, 0x01,
-                     0x02, 0x03,
-                     0x04, 0x05,
-                     0x09, 0x20,
-                     0x21, 0x32,
-                     0x33, 0x48,
-                     0xfd, 0xfe,
-                     0xff, 0x00];
+    var u8 = new Uint8Array([0x00, 0x01,
+                             0x02, 0x03,
+                             0x04, 0x05,
+                             0x09, 0x20,
+                             0x21, 0x32,
+                             0x33, 0x48,
+                             0xfd, 0xfe,
+                             0xff, 0x00]);
 
-    localStorage.setItem(key, DataType["Array"].toString( Doubler.encode( byteArray )));
+    localStorage.setItem(key, Codec.Uint8ArrayToString( Doubler.encode( u8 )));
 
-    var byteArray2 = Doubler.decode( DataType["Array"].fromString( localStorage.getItem(key) || "", 2));
+    var result = Doubler.decode( Codec.StringToUint16Array( localStorage.getItem(key) || ""));
 
     localStorage.removeItem(key);
 
-    if (byteArray.join(",") === byteArray2.join(",")) {
-        next && next.pass();
+    if (Test.likeArray(u8, result)) {
+        test.done(pass());
     } else {
-        next && next.miss();
+        test.done(miss());
     }
 }
 
 function _encodeDoubler(size) {
-    var byteArray = _makeRandomSource(size);
+    var u8  = _makeRandomSource(size);
     var now = Date.now();
-    var wordArray = Doubler.encode( byteArray );
+    var u16 = Doubler.encode( u8 );
 
-    return { elapsedTime: Date.now() - now, wordArray: wordArray };
+    return { elapsedTime: Date.now() - now, u8: u8, u16: u16 };
 }
-
 function _decodeDoubler(obj) {
     var now = Date.now();
-    var byteArray = Doubler.decode( obj.wordArray );
+    var u8  = Doubler.decode( obj.u16 );
 
-    return { elapsedTime: Date.now() - now };
+    return { elapsedTime: Date.now() - now, u8: u8 };
 }
 
 function _encodeBase64(size) {
-    var byteArray = _makeRandomSource(size);
-    var byteString = DataType["Array"].toString( byteArray );
+    var u8  = _makeRandomSource(size);
+    var str = Codec.Uint8ArrayToString( u8 );
     var now = Date.now();
-    var base64String = Base64.btoa( byteString );
+    var b64 = Codec.Base64.btoa( str );
 
-    return { elapsedTime: Date.now() - now, base64String: base64String };
+    return { elapsedTime: Date.now() - now, u8: u8, b64: b64 };
 }
-
 function _decodeBase64(obj) {
     var now = Date.now();
-    var byteString = Base64.atob( obj.base64String );
+    var str = Codec.Base64.atob( obj.b64 );
     var elapsedTime = Date.now() - now;
-    var byteArray = DataType["Array"].fromString( byteString );
+    var u8 = Codec.StringToUint8Array( str );
 
-    return { elapsedTime: elapsedTime };
+    return { elapsedTime: elapsedTime, u8: u8 };
 }
-
-function _encodeHexEncode(size) {
-    var byteArray = _makeRandomSource(size);
-    var now = Date.now();
-    var hexEncode = DataType["Array"].toHexStringArray( byteArray ).join("");
-
-    return { elapsedTime: Date.now() - now, hexEncode: hexEncode };
-}
-
-
 
 function _makeRandomSource(length) { // @arg Number:
-                                     // @ret ByteArray:
-    var source = [], value = 0;
+                                     // @ret Uint8Array:
+    var source = new Uint8Array(length), value = 0;
 
     for (var i = 0; i < length; ++i) {
-        value = Math.floor(Math.random() * 256);
-        source.push(value);
+        source[i] = Math.floor(Math.random() * 256);
     }
     return source;
 }
+
+return test.run().clone();
 
 })((this || 0).self || global);
 

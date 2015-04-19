@@ -1,32 +1,22 @@
 {
   "name": "uupaa.doubler.js",
-  "version": "0.8.24",
-  "description": "SQLite safe packer.",
+  "version": "0.9.0",
+  "description": "",
   "url": "https://github.com/uupaa/Doubler.js",
-  "keywords": [
-    "sqlite",
-    "unicode",
-    "doubler",
-    "storage",
-    "codec",
-    "util",
-    "uupaa",
-    "WebModule",
-    "Unstable"
-  ],
+  "keywords": ["doubler", "uupaa", "WebModule", "Unstable"],
   "repository": {
     "type": "git",
     "url": "https://github.com/uupaa/Doubler.js.git"
   },
   "scripts": {
     "sync": "node ../WebModule/run/sync.js; npm update; node ../WebModule/run/page.js",
-    "watch": "node ../WebModule/run/watch.js --verbose --action minify",
-    "minify": "node ../WebModule/run/minify.js --verbose --strict --keep --pretty",
-    "build": "node ../WebModule/run/minify.js --verbose --strict --module",
+    "min": "node ../WebModule/run/minify.js --verbose --strict --keep --pretty",
+    "build": "node ../WebModule/run/minify.js --verbose --strict --keep --release",
+    "watch": "node ../WebModule/run/watch.js --verbose --run hint",
     "page": "node ../WebModule/run/page.js --verbose",
-    "test": "npm run minify; npm run node; npm run browser",
-    "node": "NODE_ENV=production NODE_PATH=lib node --harmony test/index.node.js",
-    "noded": "NODE_ENV=production NODE_PATH=lib node --debug-brk --harmony test/index.node.js",
+    "test": "npm run min; npm run node; npm run browser",
+    "node": "NODE_ENV=production NODE_PATH=lib node --harmony test/node.js",
+    "noded": "NODE_ENV=production NODE_PATH=lib node --debug-brk --harmony test/node.js",
     "browser": "open http://localhost:8000/Doubler.js/test/index.html",
     "sim": "node ../WebModule/run/sim.js http://localhost:8000/Doubler.js/test/index.html",
     "simx": "node ../WebModule/run/sim.js stop",
@@ -38,25 +28,32 @@
     "stop": "killall -- Python -m SimpleHTTPServer 8000; exit 0"
   },
   "webmodule": {
-    "source": [
-      "lib/Doubler.js"
-    ],
-    "output": "release/Doubler.min.js",
-    "target": [
-      "all"
-    ],
-    "label": [
-      "@dev"
-    ]
+    "develop": false,
+    "label": ["@dev"],
+    "browser": {
+      "source": ["lib/Doubler.js"],
+      "output": "release/Doubler.b.min.js"
+    },
+    "worker": {
+      "source": ["lib/Doubler.js"],
+      "output": "release/Doubler.w.min.js"
+    },
+    "node": {
+      "source": ["lib/Doubler.js"],
+      "output": "release/Doubler.n.min.js"
+    },
+    "nw": {
+      "source": ["lib/Doubler.js"],
+      "output": "release/Doubler.nw.min.js"
+    }
   },
   "dependencies": {},
   "devDependencies": {
-    "uupaa.datatype.js": "",
-    "uupaa.base64.js": ""
+    "uupaa.codec.js": ""
   },
   "lib": "./lib/",
   "main": "./index.js",
-  "author": "uupaa <uupaa.js@gmail.com>",
+  "author": "uupaa",
   "license": "MIT",
   "contributors": []
 }
