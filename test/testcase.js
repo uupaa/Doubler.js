@@ -49,7 +49,7 @@ function testDoubler_basic(test, pass, miss) {
     var u16    = Doubler.encode( u8 );
     var result = Doubler.decode( u16 );
 
-    if (Test.likeArray(u8, result)) {
+    if (_likeArray(u8, result)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -61,11 +61,11 @@ function testDoubler_hasTailByte(test, pass, miss) {
     var byteString = "\u0000\u0001\u0002\u0003\u0004\u0005\u0020\u0021\u0032\u0033\u0048\u00fd\u00fe\u00ff";
         byteString += "\u00ff"; // add tail byte
 
-    var u8 = Codec.StringToUint8Array( byteString );
+    var u8 = TypedArray.fromString( byteString );
     var u16 = Doubler.encode( u8 );
     var result = Doubler.decode( u16 );
 
-    if (Test.likeArray(u8, result)) {
+    if (_likeArray(u8, result)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -85,7 +85,7 @@ function testDoubler_escape(test, pass, miss) {
     var u16    = Doubler.encode( u8 );
     var result = Doubler.decode( u16 );
 
-    if (Test.likeArray(u8, result)) {
+    if (_likeArray(u8, result)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -101,7 +101,7 @@ function testBase64_10Byte(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -116,7 +116,7 @@ function testBase64_100KB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -132,7 +132,7 @@ function testDoubler_100KB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -149,7 +149,7 @@ function testBase64_1MB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -165,7 +165,7 @@ function testDoubler_1MB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -182,7 +182,7 @@ function testBase64_5MB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.b64.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -198,7 +198,7 @@ function testDoubler_5MB(test, pass, miss) {
                 ", encode: " + obj1.elapsedTime + " ms" +
                 ", decode: " + obj2.elapsedTime + " ms" +
                 ", words: " + ((obj1.u16.length / 1024) | 0) + " k");
-    if (Test.likeArray(obj1.u8, obj2.u8)) {
+    if (_likeArray(obj1.u8, obj2.u8)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -217,13 +217,13 @@ function testDoublerStorage(test, pass, miss) {
                              0xfd, 0xfe,
                              0xff, 0x00]);
 
-    localStorage.setItem(key, Codec.Uint8ArrayToString( Doubler.encode( u8 )));
+    localStorage.setItem(key, TypedArray.toString( Doubler.encode( u8 )));
 
-    var result = Doubler.decode( Codec.StringToUint16Array( localStorage.getItem(key) || ""));
+    var result = Doubler.decode( TypedArray.fromString( localStorage.getItem(key) || "", Uint16Array));
 
     localStorage.removeItem(key);
 
-    if (Test.likeArray(u8, result)) {
+    if (_likeArray(u8, result)) {
         test.done(pass());
     } else {
         test.done(miss());
@@ -246,17 +246,17 @@ function _decodeDoubler(obj) {
 
 function _encodeBase64(size) {
     var u8  = _makeRandomSource(size);
-    var str = Codec.Uint8ArrayToString( u8 );
+    var str = TypedArray.toString( u8 );
     var now = Date.now();
-    var b64 = Codec.Base64.btoa( str );
+    var b64 = Base64.btoa( str );
 
     return { elapsedTime: Date.now() - now, u8: u8, b64: b64 };
 }
 function _decodeBase64(obj) {
     var now = Date.now();
-    var str = Codec.Base64.atob( obj.b64 );
+    var str = Base64.atob( obj.b64 );
     var elapsedTime = Date.now() - now;
-    var u8 = Codec.StringToUint8Array( str );
+    var u8 = TypedArray.fromString( str );
 
     return { elapsedTime: elapsedTime, u8: u8 };
 }
@@ -269,6 +269,28 @@ function _makeRandomSource(length) { // @arg Number:
         source[i] = Math.floor(Math.random() * 256);
     }
     return source;
+}
+
+function _likeArray(a,             // @arg TypedArray|Array
+                    b,             // @arg TypedArray|Array
+                    fixedDigits) { // @arg Integer = 0 - floatingNumber.toFixed(fixedDigits)
+                                   // @ret Boolean
+    fixedDigits = fixedDigits || 0;
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (var i = 0, iz = a.length; i < iz; ++i) {
+        if (fixedDigits) {
+            if ( a[i].toFixed(fixedDigits) !== b[i].toFixed(fixedDigits) ) {
+                return false;
+            }
+        } else {
+            if ( a[i] !== b[i] ) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 return test.run();
