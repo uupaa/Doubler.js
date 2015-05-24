@@ -1,28 +1,24 @@
 var ModuleTestDoubler = (function(global) {
 
-var _isNodeOrNodeWebKit = !!global.global;
-var _runOnNodeWebKit =  _isNodeOrNodeWebKit &&  /native/.test(setTimeout);
-var _runOnNode       =  _isNodeOrNodeWebKit && !/native/.test(setTimeout);
-var _runOnWorker     = !_isNodeOrNodeWebKit && "WorkerLocation" in global;
-var _runOnBrowser    = !_isNodeOrNodeWebKit && "document" in global;
-
-global["BENCHMARK"] = true;
+global["BENCHMARK"] = false;
 
 var test = new Test("Doubler", {
-        disable:    false,
-        browser:    true,
-        worker:     true,
-        node:       true,
-        nw:         true,
-        button:     true,
-        both:       true,
-        ignoreError:false,
-    });
-    test.add([
-        // --- Doubler ---
-        testDoublerBasic,
-        testDoublerHasTailByte,
-        testDoublerEscape,
+        disable:    false, // disable all tests.
+        browser:    true,  // enable browser test.
+        worker:     true,  // enable worker test.
+        node:       true,  // enable node test.
+        nw:         true,  // enable nw.js test.
+        button:     true,  // show button.
+        both:       true,  // test the primary and secondary modules.
+        ignoreError:false, // ignore error.
+        callback:   function() {
+        },
+        errorback:  function(error) {
+        }
+    }).add([
+        testDoubler_basic,
+        testDoubler_hasTailByte,
+        testDoubler_escape,
       //testBase64_10Byte
         testBase64_100KB,
         testDoubler_100KB,
@@ -32,15 +28,22 @@ var test = new Test("Doubler", {
         testDoubler_5MB,
     ]);
 
-if (_runOnBrowser || _runOnNodeWebKit) {
-    test.add([ testDoublerStorage ]);
-} else if (_runOnWorker) {
-    //test.add([]);
-} else if (_runOnNode) {
-    //test.add([]);
+if (IN_BROWSER || IN_NW) {
+    test.add([
+        // browser and node-webkit test
+    ]);
+} else if (IN_WORKER) {
+    test.add([
+        // worker test
+    ]);
+} else if (IN_NODE) {
+    test.add([
+        // node.js and io.js test
+    ]);
 }
 
-function testDoublerBasic(test, pass, miss) {
+// --- test cases ------------------------------------------
+function testDoubler_basic(test, pass, miss) {
 
     var u8     = new Uint8Array([0x42, 0x44, 0x46, 0x48, 0x4a]);
     var u16    = Doubler.encode( u8 );
@@ -53,7 +56,7 @@ function testDoublerBasic(test, pass, miss) {
     }
 }
 
-function testDoublerHasTailByte(test, pass, miss) {
+function testDoubler_hasTailByte(test, pass, miss) {
 
     var byteString = "\u0000\u0001\u0002\u0003\u0004\u0005\u0020\u0021\u0032\u0033\u0048\u00fd\u00fe\u00ff";
         byteString += "\u00ff"; // add tail byte
@@ -69,7 +72,7 @@ function testDoublerHasTailByte(test, pass, miss) {
     }
 }
 
-function testDoublerEscape(test, pass, miss) {
+function testDoubler_escape(test, pass, miss) {
 
     var u8 = new Uint8Array([0x00, 0x00,  // -> 0x0000 (NULL)
                              0x00, 0x20,  // -> 0x0020 (0x20)
@@ -268,7 +271,7 @@ function _makeRandomSource(length) { // @arg Number:
     return source;
 }
 
-return test.run().clone();
+return test.run();
 
-})((this || 0).self || global);
+})(GLOBAL);
 
