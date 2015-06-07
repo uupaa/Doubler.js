@@ -46,8 +46,8 @@ if (IN_BROWSER || IN_NW) {
 function testDoubler_basic(test, pass, miss) {
 
     var u8     = new Uint8Array([0x42, 0x44, 0x46, 0x48, 0x4a]);
-    var u16    = Doubler.encode( u8 );
-    var result = Doubler.decode( u16 );
+    var u16    = WebModule.Doubler.encode( u8 );
+    var result = WebModule.Doubler.decode( u16 );
 
     if (_likeArray(u8, result)) {
         test.done(pass());
@@ -61,9 +61,9 @@ function testDoubler_hasTailByte(test, pass, miss) {
     var byteString = "\u0000\u0001\u0002\u0003\u0004\u0005\u0020\u0021\u0032\u0033\u0048\u00fd\u00fe\u00ff";
         byteString += "\u00ff"; // add tail byte
 
-    var u8 = TypedArray.fromString( byteString );
-    var u16 = Doubler.encode( u8 );
-    var result = Doubler.decode( u16 );
+    var u8 = WebModule.TypedArray.fromString( byteString );
+    var u16 = WebModule.Doubler.encode( u8 );
+    var result = WebModule.Doubler.decode( u16 );
 
     if (_likeArray(u8, result)) {
         test.done(pass());
@@ -82,8 +82,8 @@ function testDoubler_escape(test, pass, miss) {
                              0x00, 0x20,  // -> 0x20
                              0xd8, 0x00,  // -> 0xd800 (SurrogatePairs)
                              0xdf, 0xff]);// -> 0xdfff (SurrogatePairs)
-    var u16    = Doubler.encode( u8 );
-    var result = Doubler.decode( u16 );
+    var u16    = WebModule.Doubler.encode( u8 );
+    var result = WebModule.Doubler.decode( u16 );
 
     if (_likeArray(u8, result)) {
         test.done(pass());
@@ -217,9 +217,9 @@ function testDoublerStorage(test, pass, miss) {
                              0xfd, 0xfe,
                              0xff, 0x00]);
 
-    localStorage.setItem(key, TypedArray.toString( Doubler.encode( u8 )));
+    localStorage.setItem(key, WebModule.TypedArray.toString( WebModule.Doubler.encode( u8 )));
 
-    var result = Doubler.decode( TypedArray.fromString( localStorage.getItem(key) || "", Uint16Array));
+    var result = WebModule.Doubler.decode( WebModule.TypedArray.fromString( localStorage.getItem(key) || "", Uint16Array));
 
     localStorage.removeItem(key);
 
@@ -233,30 +233,30 @@ function testDoublerStorage(test, pass, miss) {
 function _encodeDoubler(size) {
     var u8  = _makeRandomSource(size);
     var now = Date.now();
-    var u16 = Doubler.encode( u8 );
+    var u16 = WebModule.Doubler.encode( u8 );
 
     return { elapsedTime: Date.now() - now, u8: u8, u16: u16 };
 }
 function _decodeDoubler(obj) {
     var now = Date.now();
-    var u8  = Doubler.decode( obj.u16 );
+    var u8  = WebModule.Doubler.decode( obj.u16 );
 
     return { elapsedTime: Date.now() - now, u8: u8 };
 }
 
 function _encodeBase64(size) {
     var u8  = _makeRandomSource(size);
-    var str = TypedArray.toString( u8 );
+    var str = WebModule.TypedArray.toString( u8 );
     var now = Date.now();
-    var b64 = Base64.btoa( str );
+    var b64 = WebModule.Base64.btoa( str );
 
     return { elapsedTime: Date.now() - now, u8: u8, b64: b64 };
 }
 function _decodeBase64(obj) {
     var now = Date.now();
-    var str = Base64.atob( obj.b64 );
+    var str = WebModule.Base64.atob( obj.b64 );
     var elapsedTime = Date.now() - now;
-    var u8 = TypedArray.fromString( str );
+    var u8 = WebModule.TypedArray.fromString( str );
 
     return { elapsedTime: elapsedTime, u8: u8 };
 }

@@ -1,38 +1,38 @@
-# Doubler.js [![Build Status](https://travis-ci.org/uupaa/Doubler.js.png)](http://travis-ci.org/uupaa/Doubler.js)
+# Doubler.js [![Build Status](https://travis-ci.org/uupaa/Doubler.js.svg)](https://travis-ci.org/uupaa/Doubler.js)
 
-[![npm](https://nodei.co/npm/uupaa.doubler.js.png?downloads=true&stars=true)](https://nodei.co/npm/uupaa.doubler.js/)
+[![npm](https://nodei.co/npm/uupaa.doubler.js.svg?downloads=true&stars=true)](https://nodei.co/npm/uupaa.doubler.js/)
 
 SQLite safe packer.
 
 ## Document
 
-- [Doubler.js wiki](https://github.com/uupaa/Doubler.js/wiki/Doubler)
-- [WebModule](https://github.com/uupaa/WebModule)
-    - [Slide](http://uupaa.github.io/Slide/slide/WebModule/index.html)
-    - [Development](https://github.com/uupaa/WebModule/wiki/Development)
+- Doubler.js made of [WebModule](https://github.com/uupaa/WebModule).
+- [Spec](https://github.com/uupaa/Doubler.js/wiki/Doubler)
 
-## Run on
-
-### Browser and node-webkit
+## Browser and NW.js(node-webkit)
 
 ```js
-<script src="lib/Doubler.js"></script>
+<script src="<module-dir>/lib/WebModule.js"></script>
+<script src="<module-dir>/lib/Doubler.js"></script>
 <script>
-console.log( Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
+console.log( WebModule.Doubler.encode([0x42, 0x44, 0x46, 0x48, 0x4a]) );
+    ...
 </script>
 ```
 
-### WebWorkers
+## WebWorkers
 
 ```js
-importScripts("lib/Doubler.js");
+importScripts("<module-dir>lib/WebModule.js");
+importScripts("<module-dir>lib/Doubler.js");
 
 ```
 
-### Node.js
+## Node.js
 
 ```js
-require("lib/Doubler.js");
+require("<module-dir>lib/WebModule.js");
+require("<module-dir>lib/Doubler.js");
 
 ```
 
